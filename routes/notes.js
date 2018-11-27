@@ -26,9 +26,8 @@ router.get('/', (req, res, next) => {
 
 /* ========== GET/READ A SINGLE ITEM ========== */
 router.get('/:id', (req, res, next) => {
-    const { id } = req.params.id;
-    
-    Note.find(id)
+    const id = req.params.id;
+    return Note.findById(id)
     .then(results => {
       res.json(results);
     })

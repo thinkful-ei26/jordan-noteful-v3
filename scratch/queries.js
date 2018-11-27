@@ -27,30 +27,30 @@ const Note = require('../models/note');
 //     console.error(err);
 //   });
 
-  mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
-  .then(() => {
-    const id = '000000000000000000000001';
-    return Note.find({ _id: id });
-  })
-  .then(results => {
-    console.log(results);
-  })
-  .then(() => {
-    return mongoose.disconnect()
-  })
-  .catch(err => {
-    console.error(`ERROR: ${err.message}`);
-    console.error(err);
-  .then(results => {
-    console.log(results);
-  })
-  .then(() => {
-    return mongoose.disconnect()
-  })
-  .catch(err => {
-    console.error(`ERROR: ${err.message}`);
-    console.error(err);
-  });
+//   mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
+//   .then(() => {
+//     const id = '000000000000000000000001';
+//     return Note.find({ _id: id });
+//   })
+//   .then(results => {
+//     console.log(results);
+//   })
+//   .then(() => {
+//     return mongoose.disconnect()
+//   })
+//   .catch(err => {
+//     console.error(`ERROR: ${err.message}`);
+//     console.error(err);
+//   .then(results => {
+//     console.log(results);
+//   })
+//   .then(() => {
+//     return mongoose.disconnect()
+//   })
+//   .catch(err => {
+//     console.error(`ERROR: ${err.message}`);
+//     console.error(err);
+//   });
 
 //   mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
 //   .then(() => {
@@ -68,24 +68,24 @@ const Note = require('../models/note');
 //     console.error(err);
 //   });
 
-//   mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
-//   .then(() => {
-//     const newNote = {
-//         title: "Where are all the puppies?????",
-//         content: "Lorem Ipsum"
-//     };
-//     return Note.create(newNote);
-//   })
-//   .then(results => {
-//     console.log(results);
-//   })
-//   .then(() => {
-//     return mongoose.disconnect()
-//   })
-//   .catch(err => {
-//     console.error(`ERROR: ${err.message}`);
-//     console.error(err);
-//   });
+  mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
+  .then(() => {
+    const newNote = {
+        title: "Where are all the puppies?????",
+        content: "Lorem Ipsum"
+    };
+    return Note.create(newNote);
+  })
+  .then(results => {
+    console.log(results);
+  })
+  .then(() => {
+    return mongoose.disconnect()
+  })
+  .catch(err => {
+    console.error(`ERROR: ${err.message}`);
+    console.error(err);
+  });
 
 //   mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
 //   .then(() => {
