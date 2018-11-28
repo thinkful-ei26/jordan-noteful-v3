@@ -174,7 +174,7 @@ describe('DELETE /api/notes/:id', function() {
             expect(res.body.content).to.equal(data.content);
             expect(new Date(res.body.createdAt)).to.eql(data.createdAt);
             expect(new Date(res.body.updatedAt)).to.eql(data.updatedAt);
-        });
+        }); 
         });
     })
 });
