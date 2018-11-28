@@ -1,7 +1,6 @@
 'use strict';
 
 const express = require('express');
-
 const Note = require('../models/note');
 
 const router = express.Router();
@@ -27,6 +26,13 @@ router.get('/', (req, res, next) => {
 /* ========== GET/READ A SINGLE ITEM ========== */
 router.get('/:id', (req, res, next) => {
     const id = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      const err = new Error('The `id` is not valid');
+      err.status = 400;
+      return next(err);
+    }
+
     return Note.findById(id)
     .then(results => {
       res.json(results);
@@ -39,6 +45,13 @@ router.get('/:id', (req, res, next) => {
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
   const { title, content } = req.body;
+
+  if (!title) {
+    const err = new Error('Missing `title` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
   const newNote = {
         title: title,
         content: content
@@ -56,6 +69,19 @@ router.post('/', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
   const { title, content } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const err = new Error('The `id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
+
+  if (!title) {
+    const err = new Error('Missing `title` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
   const updatedNote = {
     id: id,
     title: title,
@@ -74,6 +100,13 @@ router.put('/:id', (req, res, next) => {
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const err = new Error('The `id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
+
   return Note.findByIdAndRemove(id)
   .then(results => {
     res.json(results);

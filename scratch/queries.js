@@ -68,24 +68,24 @@ const Note = require('../models/note');
 //     console.error(err);
 //   });
 
-  mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
-  .then(() => {
-    const newNote = {
-        title: "Where are all the puppies?????",
-        content: "Lorem Ipsum"
-    };
-    return Note.create(newNote);
-  })
-  .then(results => {
-    console.log(results);
-  })
-  .then(() => {
-    return mongoose.disconnect()
-  })
-  .catch(err => {
-    console.error(`ERROR: ${err.message}`);
-    console.error(err);
-  });
+//   mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
+//   .then(() => {
+//     const newNote = {
+//         title: "Where are all the puppies?????",
+//         content: "Lorem Ipsum"
+//     };
+//     return Note.create(newNote);
+//   })
+//   .then(results => {
+//     console.log(results);
+//   })
+//   .then(() => {
+//     return mongoose.disconnect()
+//   })
+//   .catch(err => {
+//     console.error(`ERROR: ${err.message}`);
+//     console.error(err);
+//   });
 
 //   mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
 //   .then(() => {
@@ -108,20 +108,20 @@ const Note = require('../models/note');
 //     console.error(err);
 //   });
 
-//   mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
-//   .then(() => {
-//     const id = '5bfda30c45d25714f36246f1';
-//     return Note.findByIdAndRemove(id);
-//   })
-//   .then(results => {
-//     console.log(results);
-//   })
-//   .then(() => {
-//     return mongoose.disconnect()
-//   })
-//   .catch(err => {
-//     console.error(`ERROR: ${err.message}`);
-//     console.error(err);
-//   });
+  mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
+  .then(() => {
+    const id = '5bfda30c45d25714f36246f1';
+    return Note.findByIdAndRemove(id);
+  })
+  .then(results => {
+    console.log(results);
+  })
+  .then(() => {
+    return mongoose.disconnect()
+  })
+  .catch(err => {
+    console.error(`ERROR: ${err.message}`);
+    console.error(err);
+  });
 
 
