@@ -2,6 +2,7 @@
 
 const express = require('express');
 const Note = require('../models/note');
+const mongoose = require('mongoose');
 
 const router = express.Router();
 
