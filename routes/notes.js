@@ -38,25 +38,49 @@ router.get('/:id', (req, res, next) => {
 
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
-
-  console.log('Create a Note');
-  res.location('path/to/new/document').status(201).json({ id: 2, title: 'Temp 2' });
-
-});
+  const { title, content } = req.body;
+  const newNote = {
+        title: title,
+        content: content
+    };
+    return Note.create(newNote)
+    .then(results => {
+      res.json(results);
+    })
+    .catch(err => {
+      next(err);
+    })
+  });
 
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
-
-  console.log('Update a Note');
-  res.json({ id: 1, title: 'Updated Temp 1' });
+  const id = req.params.id;
+  const { title, content } = req.body;
+  const updatedNote = {
+    id: id,
+    title: title,
+    content: content
+  }
+  return Note.findByIdAndUpdate(id, updatedNote)
+  .then(results => {
+    res.json(results);
+  })
+  .catch(err => {
+    next(err);
+  })
 
 });
 
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
 router.delete('/:id', (req, res, next) => {
-
-  console.log('Delete a Note');
-  res.status(204).end();
+  const id = req.params.id;
+  return Note.findByIdAndRemove(id)
+  .then(results => {
+    res.json(results);
+  })
+  .catch(err => {
+    next(err);
+  })
 });
 
 module.exports = router;
