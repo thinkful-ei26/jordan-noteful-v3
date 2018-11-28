@@ -42,6 +42,8 @@ app.use((err, req, res, next) => {
   }
 });
 
+//prevents mongoose.connect & app.list from executing while running tests
+if (require.main === module) {
 // connect to DB & Listen for incoming connections
 mongoose.connect(MONGODB_URI, { useNewUrlParser:true })
   .catch(err => {
@@ -55,5 +57,6 @@ app.listen(PORT, function () {
 }).on('error', err => {
   console.error(err);
 });
+}
 
 module.exports = app; // Export for testing
