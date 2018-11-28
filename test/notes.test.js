@@ -95,7 +95,7 @@ describe('GET /api/notes/:id', function() {
 });
 
 describe('GET /api/notes', function() {
-    it('should return all notes')
+    it('should return all notes', function() {
     //1) Call the DB **AND** the API
     //2) Wait for both promises to resolve using `Promise.all`
     return Promise.all([
@@ -109,6 +109,7 @@ describe('GET /api/notes', function() {
             expect(res.body).to.be.a('array');
             expect(res.body).to.have.length(data.length);
         });
+    }) 
 });
 
 describe('PUT /api/notes/:id', function() {
@@ -147,34 +148,35 @@ describe('PUT /api/notes/:id', function() {
 });
 
 describe('DELETE /api/notes/:id', function() {
-    it('should delete an item by id')
-    const id = '000000000000000000000003'
-    let data
-      // 1) First, call the database
-    chai.request(app)
-    .delete('/api/notes/:id' + id.id)
-    .send(id)
-    return Note.findOne()
-    .then(_data => {
-        data = _data;
-        // 2) then call the API with the ID
-        return chai.request(app).get(`/api/notes/${data.id}`)
+    it('should delete an item by id', function() {
+        const id = '000000000000000000000003'
+        let data
+          // 1) First, call the database
+        chai.request(app)
+        .delete('/api/notes/:id' + id.id)
+        .send(id)
+        return Note.findOne()
+        .then(_data => {
+            data = _data;
+            // 2) then call the API with the ID
+            return chai.request(app).get(`/api/notes/${data.id}`)
+        })
+        .then((res) => {
+            expect(res).to.have.status(200);
+            expect(res).to.be.json;
+    
+            expect(res.body).to.be.an('object');
+            expect(res.body).to.have.keys('id', 'title', 'content', 'createdAt', 'updatedAt');
+    
+            // 3) then compare database results to API response
+            expect(res.body.id).to.equal(data.id);
+            expect(res.body.title).to.equal(data.title);
+            expect(res.body.content).to.equal(data.content);
+            expect(new Date(res.body.createdAt)).to.eql(data.createdAt);
+            expect(new Date(res.body.updatedAt)).to.eql(data.updatedAt);
+        });
+        });
     })
-    .then((res) => {
-        expect(res).to.have.status(200);
-        expect(res).to.be.json;
-
-        expect(res.body).to.be.an('object');
-        expect(res.body).to.have.keys('id', 'title', 'content', 'createdAt', 'updatedAt');
-
-        // 3) then compare database results to API response
-        expect(res.body.id).to.equal(data.id);
-        expect(res.body.title).to.equal(data.title);
-        expect(res.body.content).to.equal(data.content);
-        expect(new Date(res.body.createdAt)).to.eql(data.createdAt);
-        expect(new Date(res.body.updatedAt)).to.eql(data.updatedAt);
-    });
-    });
 });
 
   
