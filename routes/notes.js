@@ -9,15 +9,20 @@ const router = express.Router();
 
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
-    const { searchTerm } = req.query;
-    const folderId = req.query.folderId;
+    const { searchTerm, folderId } = req.query;
 
     const regex = new RegExp(searchTerm, 'i');
 
     let noteFilter = {};
-    noteFilter.$or = [{ 'title': regex}, { 'content': regex}]
-    noteFilter.$or = [{ 'folderId': folderId }]
-        
+
+    if (searchTerm) {
+      noteFilter.$or = [{ 'title': regex}, { 'content': regex}]
+    }
+
+    if (folderId) {
+      noteFilter.folderId = folderId;
+    }
+
     Note.find(noteFilter)
     .sort({ updatedAt: 'desc'})
     .then(results => {
