@@ -8,8 +8,7 @@ const app = require('../server');
 const { TEST_MONGODB_URI } = require('../config');
 
 const Note = require('../models/note');
-const Folder = require('../models/folder');
-const { data } = require('../db/seed/data');
+const { notes, folders } = require('../db/seed/data');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -23,12 +22,7 @@ describe('Notes API', function(){
     
       beforeEach(function () {
         // run before every test, inserts sample notes (something to test)
-        return Note.insertMany(data);
-      });
-
-      beforeEach(function () {
-        // run before every test, inserts sample notes (something to test)
-        return Folder.insertMany(data);
+        return Note.insertMany(notes, folders);
       });
     
       afterEach(function () {
