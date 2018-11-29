@@ -10,11 +10,15 @@ const router = express.Router();
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
     const { searchTerm } = req.query;
+    const folderId = req.query.folderId;
+
     const regex = new RegExp(searchTerm, 'i');
-    let filter = {};
-    filter.$or = [{ 'title': regex}, { 'content': regex}]
+
+    let noteFilter = {};
+    noteFilter.$or = [{ 'title': regex}, { 'content': regex}]
+    noteFilter.$or = [{ 'folderId': folderId }]
         
-    Note.find(filter)
+    Note.find(noteFilter)
     .sort({ updatedAt: 'desc'})
     .then(results => {
       res.json(results);
@@ -49,6 +53,12 @@ router.post('/', (req, res, next) => {
 
   if (!title) {
     const err = new Error('Missing `title` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(folderId)) {
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
