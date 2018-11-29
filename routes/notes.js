@@ -80,9 +80,15 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
-  const { title, content } = req.body;
+  const { title, content, folderId } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
+    const err = new Error('The `id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(folderId)) {
     const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
@@ -97,7 +103,8 @@ router.put('/:id', (req, res, next) => {
   const updatedNote = {
     id: id,
     title: title,
-    content: content
+    content: content,
+    folderId: folderId
   }
   return Note.findByIdAndUpdate(id, updatedNote)
   .then(results => {
