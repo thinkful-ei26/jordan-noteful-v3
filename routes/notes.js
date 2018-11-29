@@ -102,14 +102,15 @@ router.put('/:id', (req, res, next) => {
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
+  const { note } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(id, note)) {
     const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
 
-  return Note.findByIdAndRemove(id)
+  return Folder.findByIdAndRemove(id, note)
   .then(results => {
     res.json(results);
   })
