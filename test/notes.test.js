@@ -23,7 +23,7 @@ describe('Notes API', function(){
       beforeEach(function () {
         // run before every test, inserts sample notes (something to test)
         return Note.insertMany(notes, folders);
-      });
+      }); 
     
       afterEach(function () {
           //after each test, clean up the DB (so that one test doesn't affect another)
