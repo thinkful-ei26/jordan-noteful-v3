@@ -9,7 +9,7 @@ const router = express.Router();
 
 /* ========== GET/READ ALL ITEMS ========== */
 router.get('/', (req, res, next) => {
-    const { searchTerm, folderId } = req.query;
+    const { searchTerm, folderId, tagId } = req.query;
 
     const regex = new RegExp(searchTerm, 'i');
 
@@ -23,7 +23,12 @@ router.get('/', (req, res, next) => {
       noteFilter.folderId = folderId;
     }
 
+    if (tagId) {
+      noteFilter.tagId = tagId;
+    }
+
     Note.find(noteFilter)
+    .populate('tags')
     .sort({ updatedAt: 'desc'})
     .then(results => {
       res.json(results);
@@ -55,6 +60,7 @@ router.get('/:id', (req, res, next) => {
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
   const { title, content, folderId } = req.body;
+  const { tagId } = req.body;
 
   if (!title) {
     const err = new Error('Missing `title` in request body');
@@ -68,10 +74,17 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
+  if (tagId && !mongoose.Types.ObjectId.isValid(folderId)) {
+    const err = new Error('The `id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
+
   const newNote = {
         title: title,
         content: content,
-        folderId: folderId
+        folderId: folderId,
+        tagId: tagId
     };
 
     if (folderId === ""){

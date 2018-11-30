@@ -4,7 +4,7 @@ const tagSchema = new mongoose.Schema ({
     name: { type: String, required: true, unique: true }
 });
 
-tagchema.set('timestamps', true);
+tagSchema.set('timestamps', true);
 
 tagSchema.set('toJSON', {
     virtuals: true,     // include built-in virtual `id`
