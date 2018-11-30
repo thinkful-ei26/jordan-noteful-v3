@@ -8,7 +8,7 @@ const app = require('../server');
 const { TEST_MONGODB_URI } = require('../config');
 
 const Note = require('../models/note');
-const { notes, folders } = require('../db/seed/data');
+const { notes, folders, tags } = require('../db/seed/data');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -22,7 +22,7 @@ describe('Notes API', function(){
     
       beforeEach(function () {
         // run before every test, inserts sample notes (something to test)
-        return Note.insertMany(notes, folders);
+        return Note.insertMany(notes, folders, tags);
       }); 
     
       afterEach(function () {
@@ -40,7 +40,8 @@ describe('POST /api/notes', function() {
         const newItem = {
             'title': 'The best article about cats ever!',
             'content': '...Lorem ipsum...',
-            'folderId': '111111111111111111111102'
+            'folderId': '111111111111111111111102',
+            'tagId': '222222222222222222222200'
         };
 
         let res;
@@ -54,7 +55,7 @@ describe('POST /api/notes', function() {
                 expect(res).to.have.header('location');
                 expect(res).to.be.json;
                 expect(res.body).to.be.a('object');
-                expect(res.body).to.have.keys('id', 'title', 'content', 'folderId', 'createdAt', 'updatedAt')
+                expect(res.body).to.have.keys('id', 'title', 'content', 'folderId', 'tags', 'createdAt', 'updatedAt')
         //2) CALL THE DB
                 return Note.findById(res.body.id);        
             })
@@ -83,7 +84,7 @@ describe('GET /api/notes/:id', function() {
                 expect(res).to.have.status(200);
                 expect(res).to.be.json;
                 expect(res.body).to.be.a('object');
-                expect(res.body).to.have.keys('id', 'title', 'content', 'folderId', 'createdAt', 'updatedAt');
+                expect(res.body).to.have.keys('id', 'title', 'content', 'folderId', 'tags', 'createdAt', 'updatedAt');
 
                 //3) COMPARE DB RESULTS TO API RESPONSE
                 expect(res.body.id).to.equal(data.id);
@@ -118,7 +119,8 @@ describe('PUT /api/notes/:id', function() {
 
     const updatedItem = {
         'title': 'I HAVE BEEN UPDATED!!!!!!',
-        'content': '...Lorem ipsum...'
+        'content': '...Lorem ipsum...',
+        'tagId': '222222222222222222222202'
     };
     let data
       // 1) First, call the database
@@ -136,7 +138,7 @@ describe('PUT /api/notes/:id', function() {
         expect(res).to.be.json;
 
         expect(res.body).to.be.an('object');
-        expect(res.body).to.have.keys('id', 'title', 'content', 'folderId', 'createdAt', 'updatedAt');
+        expect(res.body).to.have.keys('id', 'title', 'content', 'folderId', 'tags', 'createdAt', 'updatedAt');
 
         // 3) then compare database results to API response
         expect(res.body.id).to.equal(data.id);
@@ -167,7 +169,7 @@ describe('DELETE /api/notes/:id', function() {
             expect(res).to.be.json;
     
             expect(res.body).to.be.an('object');
-            expect(res.body).to.have.keys('id', 'title', 'content', 'folderId', 'createdAt', 'updatedAt');
+            expect(res.body).to.have.keys('id', 'title', 'content', 'folderId', 'tags', 'createdAt', 'updatedAt');
     
             // 3) then compare database results to API response
             expect(res.body.id).to.equal(data.id);
