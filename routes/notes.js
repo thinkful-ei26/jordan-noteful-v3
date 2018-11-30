@@ -62,7 +62,7 @@ router.post('/', (req, res, next) => {
     return next(err);
   }
 
-  if (!mongoose.Types.ObjectId.isValid(folderId)) {
+  if (folderId && !mongoose.Types.ObjectId.isValid(folderId)) {
     const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
@@ -73,6 +73,11 @@ router.post('/', (req, res, next) => {
         content: content,
         folderId: folderId
     };
+
+    if (folderId === ""){
+      newNote.folderId = null;
+    }
+
     return Note.create(newNote)
     .then(results => {
       res.location(`http://${req.headers.host}/notes/${results.id}`).status(201).json(results);
@@ -111,6 +116,12 @@ router.put('/:id', (req, res, next) => {
     content: content,
     folderId: folderId
   }
+
+  if (folderId === "") {
+    delete updatedNote.folderId;
+    updatedNote.$unset = { folderId: ' ' }
+  }
+
   return Note.findByIdAndUpdate(id, updatedNote)
   .then(results => {
     res.json(results);
