@@ -113,9 +113,7 @@ router.delete('/:id', (req, res, next) => {
   
   Promise.all([deleteTagId, deleteTagFromNotes])
   .then(() => {
-  return Note
-      .deleteMany({ tagId: id })
-      .then(res.sendStatus(204));
+    return (res.sendStatus(204));
   })
   .catch(err => {
     next(err);
