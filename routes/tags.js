@@ -20,7 +20,7 @@ router.get('/', (req, res, next) => {
     })
   });
 
-/* ========== GET/READ A SINGLE FOLDER ========== */
+/* ========== GET/READ A SINGLE TAG ========== */
 router.get('/:id', (req, res, next) => {
     const id = req.params.id;
 
@@ -39,7 +39,7 @@ router.get('/:id', (req, res, next) => {
     })
 });
 
-/* ========== POST/CREATE A FOLDER ========== */
+/* ========== POST/CREATE A TAG ========== */
 router.post('/', (req, res, next) => {
   const { name } = req.body;
 
@@ -58,14 +58,14 @@ router.post('/', (req, res, next) => {
     })
     .catch(err => {
         if (err.code === 11000) {
-            err = new Error('The folder name already exists');
+            err = new Error('The tag name already exists');
             err.status = 400;
         }
         next(err);
         });
   });
 
-/* ========== PUT/UPDATE A FOLDER ========== */
+/* ========== PUT/UPDATE A TAG ========== */
 router.put('/:id', (req, res, next) => {
   const id = req.params.id;
   const { name } = req.body;
@@ -98,7 +98,7 @@ router.put('/:id', (req, res, next) => {
   });
 });
 
-/* ========== DELETE/REMOVE A FOLDER & IT'S CONTENT ========== */
+/* ========== DELETE/REMOVE A TAG & IT'S CONTENT ========== */
 router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
 
@@ -109,6 +109,10 @@ router.delete('/:id', (req, res, next) => {
   }
 
   Tag.findByIdAndRemove(id)
+
+  Note.findByIdAndUpdate(id)
+    .then($pull({'tags':'tags'}))
+  
   .then(() => {
     return Note
         .deleteMany({ tagId: id })

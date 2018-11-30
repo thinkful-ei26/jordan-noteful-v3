@@ -40,8 +40,8 @@ describe('POST /api/notes', function() {
         const newItem = {
             'title': 'The best article about cats ever!',
             'content': '...Lorem ipsum...',
-            'folderId': '111111111111111111111102',
-            'tagId': '222222222222222222222200'
+            'folderId': '5c00592e08bcef4ed534daf6',
+            'tags': ['222222222222222222222200']
         };
 
         let res;
