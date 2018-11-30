@@ -7,13 +7,13 @@ const mongoose = require('mongoose');
 const app = require('../server');
 const { TEST_MONGODB_URI } = require('../config');
 
-const Folder = require('../models/folder');
-const { folders } = require('../db/seed/data');
+const Tag = require('../models/tags');
+const { tags } = require('../db/seed/data');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
 
-describe('Folders API', function(){
+describe('Tags API', function(){
     before(function () {
         //connect to mongoose & clean out the DB in case there's any annoying things
         return mongoose.connect(TEST_MONGODB_URI)
@@ -21,8 +21,8 @@ describe('Folders API', function(){
       });
     
       beforeEach(function () {
-        // run before every test, inserts sample folders (something to test)
-        return Folder.insertMany(folders);
+        // run before every test, inserts sample tags (something to test)
+        return Tag.insertMany(tags);
       });
     
       afterEach(function () {
@@ -35,17 +35,17 @@ describe('Folders API', function(){
         return mongoose.disconnect();
       });
 
-describe('POST /api/folders', function() {
-    it('should create and return a new folder when provided valid data', function() {
-        const newFolder = {
-            'name': 'NEW AND SHINY FOLDER'
+describe('POST /api/tags', function() {
+    it('should create and return a new tag when provided valid data', function() {
+        const newTag = {
+            'name': 'NEW AND SHINY TAG'
         };
 
         let res;
         //1) CALL THE API TO INSERT A DOCUMENT
         return chai.request(app)
-            .post('/api/folders')
-            .send(newFolder)
+            .post('/api/tags')
+            .send(newTag)
             .then(function (_res) {
                 res = _res;
                 expect(res).to.have.status(201);
@@ -53,7 +53,7 @@ describe('POST /api/folders', function() {
                 expect(res.body).to.be.a('object');
                 expect(res.body).to.have.keys('id', 'name', 'updatedAt', 'createdAt')
         //2) CALL THE DB
-                return Folder.findById(res.body.id);        
+                return Tag.findById(res.body.id);        
             })
         //3) COMPARE API RESPONSE TO DB RESULTS
         .then(data => {
@@ -65,15 +65,15 @@ describe('POST /api/folders', function() {
     });
 });
 
-describe('GET /api/folders/:id', function() {
-    it('should return correct folder', function() {
+describe('GET /api/tags/:id', function() {
+    it('should return correct tag', function() {
         let data;
         //1)CALL THE DB
-        return Folder.findOne()
+        return Tag.findOne()
             .then(_data => {
                 data = _data;
                 //2) CALL THE API WITH THE ID
-                return chai.request(app).get(`/api/folders/${data.id}`);
+                return chai.request(app).get(`/api/tags/${data.id}`);
             })
             .then((res) => {
                 expect(res).to.have.status(200);
@@ -90,13 +90,13 @@ describe('GET /api/folders/:id', function() {
     });
 });
 
-describe('GET /api/folders', function() {
-    it('should return all folders', function() {
+describe('GET /api/tags', function() {
+    it('should return all tags', function() {
     //1) Call the DB **AND** the API
     //2) Wait for both promises to resolve using `Promise.all`
     return Promise.all([
-        Folder.find(),
-        chai.request(app).get('/api/folders')
+        Tag.find(),
+        chai.request(app).get('/api/tags')
     ])
     //3) Compare DB results to API response
         .then(([data, res]) => {
@@ -108,22 +108,22 @@ describe('GET /api/folders', function() {
     }) 
 });
 
-describe('PUT /api/folders/:id', function() {
-    it('find folder by ID then update name fields', function() {
+describe('PUT /api/tags/:id', function() {
+    it('find tags by ID then update name fields', function() {
 
     const updatedItem = {
-        'name': 'A  BRAND NEW SHINY UPDATED FOLDER'
+        'name': 'A BRAND NEW SHINY UPDATED TAG YAY!!!'
     };
     let data
       // 1) First, call the database
     chai.request(app)
     .put('/api/folders/:id' + updatedItem.id)
     .send(updatedItem)
-    return Folder.findOne()
+    return Tag.findOne()
     .then(_data => {
         data = _data;
         // 2) then call the API with the ID
-        return chai.request(app).get(`/api/folders/${data.id}`)
+        return chai.request(app).get(`/api/tags/${data.id}`)
     })
     .then((res) => {
         expect(res).to.have.status(200);
@@ -141,19 +141,19 @@ describe('PUT /api/folders/:id', function() {
     });
 });
 
-describe('DELETE /api/folders/:id', function() {
-    it('should delete a folder and all contents by id', function() {
+describe('DELETE /api/tags/:id', function() {
+    it('should delete a tag and all contents by id', function() {
         const id = '5c00592e08bcef4ed534daf6'
         let data
           // 1) First, call the database
         chai.request(app)
-        .delete('/api/folders/:id' + id.id)
+        .delete('/api/tags/:id' + id.id)
         .send(id)
-        return Folder.findOne()
+        return Tag.findOne()
         .then(_data => {
             data = _data;
             // 2) then call the API with the ID
-            return chai.request(app).get(`/api/folders/${data.id}`)
+            return chai.request(app).get(`/api/tags/${data.id}`)
         })
         .then((res) => {
             expect(res).to.have.status(200);
