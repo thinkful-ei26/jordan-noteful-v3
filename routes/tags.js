@@ -108,15 +108,14 @@ router.delete('/:id', (req, res, next) => {
     return next(err);
   }
 
-  Tag.findByIdAndRemove(id)
-
-  Note.findByIdAndUpdate(id)
-    .then($pull({'tags':'tags'}))
+  const deleteTagId = Tag.findByIdAndRemove(id)
+  const deleteTagFromNotes = Note.updateMany({ tags: id}, { $pull: {tags: id} })
   
+  Promise.all([deleteTagId, deleteTagFromNotes])
   .then(() => {
-    return Note
-        .deleteMany({ tagId: id })
-        .then(res.sendStatus(204));
+  return Note
+      .deleteMany({ tagId: id })
+      .then(res.sendStatus(204));
   })
   .catch(err => {
     next(err);
